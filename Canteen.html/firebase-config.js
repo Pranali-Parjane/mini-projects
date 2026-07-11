@@ -6,7 +6,7 @@ import { getAuth } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyCNv4XiZUwt600-r5JYxv3Wsw5AI0aM-Co",
+  apiKey: "YOUR_API_KEY",
   authDomain: "canteen-ordering-system-dc25a.firebaseapp.com",
   projectId: "canteen-ordering-system-dc25a",
   storageBucket: "canteen-ordering-system-dc25a.firebasestorage.app",
