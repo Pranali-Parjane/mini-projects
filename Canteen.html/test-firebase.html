@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Test - Canteen System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .loading {
+            color: #ffc107;
+            font-weight: bold;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Firebase Integration Test</h1>
+    <p>This page tests if Firebase is properly configured and working.</p>
+
+    <div class="test-section">
+        <h2>1. Firebase Connection Test</h2>
+        <div id="connection-status" class="status loading">Testing Firebase connection...</div>
+        <button onclick="testConnection()">Test Connection</button>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Menu Service Test</h2>
+        <div id="menu-status" class="status loading">Testing menu service...</div>
+        <button onclick="testMenuService()">Test Menu Service</button>
+        <div id="menu-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Order Service Test</h2>
+        <div id="order-status" class="status loading">Testing order service...</div>
+        <button onclick="testOrderService()">Test Order Service</button>
+        <div id="order-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Search Test</h2>
+        <input type="text" id="search-input" placeholder="Search for food items..." style="width: 300px; padding: 8px;">
+        <button onclick="testSearch()">Search</button>
+        <div id="search-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Quick Actions</h2>
+        <button onclick="window.location.href='templates/index.html'">Go to Homepage</button>
+        <button onclick="window.location.href='templates/menup.html'">Go to Menu</button>
+        <button onclick="window.location.href='templates/canteen-admin.html'">Go to Admin</button>
+    </div>
+
+    <!-- Firebase Configuration -->
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="firebase-services.js"></script>
+
+    <script type="module">
+        let menuService, orderService;
+
+        // Initialize services when DOM is loaded
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Wait for Firebase to be initialized
+                while (!window.db) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
+                
+                menuService = new MenuService(window.db);
+                orderService = new OrderService(window.db);
+                
+                console.log('Test page: Firebase services initialized');
+                updateConnectionStatus('success', 'Firebase connected successfully!');
+            } catch (error) {
+                console.error('Test page: Error initializing Firebase:', error);
+                updateConnectionStatus('error', 'Firebase connection failed: ' + error.message);
+            }
+        });
+
+        function updateConnectionStatus(type, message) {
+            const status = document.getElementById('connection-status');
+            status.className = `status ${type}`;
+            status.textContent = message;
+        }
+
+        function updateMenuStatus(type, message) {
+            const status = document.getElementById('menu-status');
+            status.className = `status ${type}`;
+            status.textContent = message;
+        }
+
+        function updateOrderStatus(type, message) {
+            const status = document.getElementById('order-status');
+            status.className = `status ${type}`;
+            status.textContent = message;
+        }
+
+        async function testConnection() {
+            updateConnectionStatus('loading', 'Testing connection...');
+            
+            try {
+                if (window.db) {
+                    updateConnectionStatus('success', 'Firebase connection is working!');
+                } else {
+                    updateConnectionStatus('error', 'Firebase not initialized');
+                }
+            } catch (error) {
+                updateConnectionStatus('error', 'Connection test failed: ' + error.message);
+            }
+        }
+
+        async function testMenuService() {
+            updateMenuStatus('loading', 'Testing menu service...');
+            
+            try {
+                if (!menuService) {
+                    updateMenuStatus('error', 'Menu service not initialized');
+                    return;
+                }
+
+                // Initialize menu data
+                await menuService.initializeMenuData();
+                
+                // Get all menu items
+                const items = await menuService.getAllMenuItems();
+                
+                updateMenuStatus('success', `Menu service working! Found ${items.length} items.`);
+                
+                // Display first few items
+                const results = document.getElementById('menu-results');
+                results.innerHTML = '<h3>Sample Menu Items:</h3>';
+                items.slice(0, 3).forEach(item => {
+                    results.innerHTML += `<div>• ${item.name} - ₹${item.price} (${item.category})</div>`;
+                });
+                
+            } catch (error) {
+                updateMenuStatus('error', 'Menu service test failed: ' + error.message);
+                console.error('Menu service error:', error);
+            }
+        }
+
+        async function testOrderService() {
+            updateOrderStatus('loading', 'Testing order service...');
+            
+            try {
+                if (!orderService) {
+                    updateOrderStatus('error', 'Order service not initialized');
+                    return;
+                }
+
+                // Test order creation
+                const testOrder = {
+                    name: 'Test Customer',
+                    phone: '1234567890',
+                    items: [
+                        { item: 'Test Item', price: 50, qty: 1 }
+                    ],
+                    total: 50
+                };
+
+                const result = await orderService.saveOrder(testOrder);
+                
+                if (result.success) {
+                    updateOrderStatus('success', `Order service working! Test order created with token #${result.token}`);
+                    
+                    // Get all orders
+                    const orders = await orderService.getAllOrders();
+                    const results = document.getElementById('order-results');
+                    results.innerHTML = `<h3>Orders in Database: ${orders.length}</h3>`;
+                    
+                    if (orders.length > 0) {
+                        const latestOrder = orders[0];
+                        results.innerHTML += `
+                            <div>
+                                <strong>Latest Order:</strong><br>
+                                Token: #${latestOrder.token}<br>
+                                Customer: ${latestOrder.name}<br>
+                                Total: ₹${latestOrder.total}<br>
+                                Status: ${latestOrder.status}
+                            </div>
+                        `;
+                    }
+                } else {
+                    updateOrderStatus('error', 'Order creation failed: ' + result.error);
+                }
+                
+            } catch (error) {
+                updateOrderStatus('error', 'Order service test failed: ' + error.message);
+                console.error('Order service error:', error);
+            }
+        }
+
+        async function testSearch() {
+            const query = document.getElementById('search-input').value.trim();
+            const results = document.getElementById('search-results');
+            
+            if (!query) {
+                results.innerHTML = '<div class="error">Please enter a search term</div>';
+                return;
+            }
+
+            if (!menuService) {
+                results.innerHTML = '<div class="error">Menu service not initialized</div>';
+                return;
+            }
+
+            try {
+                results.innerHTML = '<div class="loading">Searching...</div>';
+                const searchResults = await menuService.searchMenuItems(query);
+                
+                if (searchResults.length === 0) {
+                    results.innerHTML = '<div>No items found for: "' + query + '"</div>';
+                } else {
+                    results.innerHTML = `<h3>Search Results for "${query}" (${searchResults.length} items):</h3>`;
+                    searchResults.forEach(item => {
+                        results.innerHTML += `<div>• ${item.name} - ₹${item.price} (${item.category})</div>`;
+                    });
+                }
+            } catch (error) {
+                results.innerHTML = '<div class="error">Search failed: ' + error.message + '</div>';
+                console.error('Search error:', error);
+            }
+        }
+
+        // Make functions globally available
+        window.testConnection = testConnection;
+        window.testMenuService = testMenuService;
+        window.testOrderService = testOrderService;
+        window.testSearch = testSearch;
+    </script>
+</body>
+</html>
+
+
+

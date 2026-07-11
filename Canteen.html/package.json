@@ -1,0 +1,31 @@
+{
+  "name": "canteen-ordering-system",
+  "version": "1.0.0",
+  "description": "A complete canteen ordering system with Firebase backend",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "python -m http.server 8000",
+    "test": "open test-firebase.html"
+  },
+  "keywords": [
+    "canteen",
+    "ordering",
+    "system",
+    "firebase",
+    "food",
+    "restaurant"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/canteen-ordering-system.git"
+  },
+  "homepage": "https://yourusername.github.io/canteen-ordering-system"
+}
+
+
+

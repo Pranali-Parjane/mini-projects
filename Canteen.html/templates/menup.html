@@ -1,0 +1,480 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canteen Ordering System 🍴</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fff3e0; /* warm yellow background */
+      color: #333;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      background: linear-gradient(90deg, #b91c1c, #f59e0b);
+      border-bottom: 2px solid #7f1d1d;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: #fff;
+      padding: 14px 20px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    nav a:hover {
+      background: #fbbf24;
+      border-radius: 20px;
+      color: #7f1d1d;
+    }
+    section {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
+    h2 {
+      color: #b91c1c;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .menu-item, .order-item {
+      background: #fff;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      transition: transform 0.2s ease;
+    }
+    .menu-item:hover {
+      transform: translateY(-4px);
+    }
+    .menu-item img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-right: 15px;
+    }
+    .menu-text {
+      flex: 1;
+      font-weight: 500;
+      color: #111;
+    }
+    button {
+      background: #b91c1c;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 30px;
+      cursor: pointer;
+      margin: 3px;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #f59e0b;
+    }
+    .search-box {
+      margin: 15px 0;
+      text-align: center;
+    }
+    .search-box input {
+      width: 90%;
+      padding: 12px;
+      border-radius: 30px;
+      border: 1px solid #aaa;
+      font-size: 15px;
+      outline: none;
+      transition: 0.3s;
+    }
+    .search-box input:focus {
+      border-color: #b91c1c;
+      box-shadow: 0 0 8px rgba(185, 28, 28, 0.3);
+    }
+    .status {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #b91c1c;
+    }
+    .history-item {
+      background: #fff;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .food-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#" onclick="showPage('menu')">Menu</a>
+    <a href="#" onclick="showPage('orders')">My Orders</a>
+  </nav>
+
+  <!-- Menu Page -->
+  <section id="menu-page">
+    <h2>Our Menu ✨</h2>
+    <div></div><input type="text" id="searchBox" placeholder="Search food...">
+<button id="searchBtn">Search</button>
+  </div>
+<!-- This is where results will show -->
+<div id="results"></div>
+
+    
+    <div id="menu-list" class="food-list">
+      <!-- Food Items -->
+      <div class="menu-item"><img src="https://i.pinimg.com/1200x/07/d5/b9/07d5b9f9d5bc5d6b2922f863a701a709.jpg" alt="Veg Sandwich"><div class="menu-text">Veg Sandwich - ₹40</div><button onclick="addToOrder('Veg Sandwich', 40)">Add</button></div>
+      <div class="menu-item"><img src="https://i.pinimg.com/1200x/9c/3b/72/9c3b7274384a0bab197fd68115a395ff.jpg" alt="Pasta"><div class="menu-text">Pasta - ₹70</div><button onclick="addToOrder('Pasta', 70)">Add</button></div>
+      <div class="menu-item"><img src="https://i.pinimg.com/736x/ae/a7/76/aea77686ef7abd6b426332cf3018e095.jpg" alt="Burger"><div class="menu-text">Cheese Burger - ₹90</div><button onclick="addToOrder('Cheese Burger',90)">Add</button></div>
+      <div class="menu-item"><img src="https://i.pinimg.com/736x/37/b6/60/37b660cb40988dda83c8d345f62c83da.jpg" alt="Pizza"><div class="menu-text">Margherita Pizza - ₹120</div><button onclick="addToOrder('Margherita Pizza',120)">Add</button></div>
+      <div class="menu-item"><img src="https://i.pinimg.com/736x/a6/1a/11/a61a116c38ab125d93f3c67aff74a07e.jpg" alt="Coffee"><div class="menu-text">Cold Coffee - ₹50</div><button onclick="addToOrder('Cold Coffee',50)">Add</button></div>
+      <div class="menu-item"><img src="https://i.pinimg.com/736x/1e/54/af/1e54afeaa85c39ac3464a613b911e61e.jpg" alt="Tea"><div class="menu-text">Masala Chai - ₹20</div><button onclick="addToOrder('Masala Chai',20)">Add</button></div>
+      <div class="menu-item"><img src="https://i.pinimg.com/736x/93/51/04/93510488228f49d24ccb4b271c28fc4b.jpg" alt="Fries"><div class="menu-text">French Fries - ₹60</div><button onclick="addToOrder('French Fries',60)">Add</button></div>
+      <div class="menu-item"><img src="https://i.pinimg.com/1200x/85/09/10/850910eeb1283265cdded6dc94107ba4.jpg" alt="Noodles"><div class="menu-text">Hakka Noodles - ₹80</div><button onclick="addToOrder('Hakka Noodles',80)">Add</button></div>
+      <div class="menu-item"><img src="https://i.pinimg.com/1200x/d9/28/98/d928988009de3cd9e90c68cbb3acdd02.jpg" alt="Dosa"><div class="menu-text">Masala Dosa - ₹70</div><button onclick="addToOrder('Masala Dosa',70)">Add</button></div>
+      <div class="menu-item"><img src="https://i.pinimg.com/736x/c3/87/f5/c387f5c4a82802b5c138d0ab6dd84d8d.jpg" alt="Idli"><div class="menu-text">Idli Sambar - ₹50</div><button onclick="addToOrder('Idli Sambar',50)">Add</button></div>
+      <div class="menu-item"><img src="https://i.pinimg.com/1200x/3a/3a/82/3a3a8206a0eb3f5e3c7c029619ab866d.jpg" alt="Rice"><div class="menu-text">Fried Rice - ₹90</div><button onclick="addToOrder('Fried Rice',90)">Add</button></div>
+      <div class="menu-item"><img src="https://i.pinimg.com/1200x/ca/ec/45/caec45f62f12c720d17b14dfc2ae61eb.jpg" alt="Soup"><div class="menu-text">Tomato Soup - ₹40</div><button onclick="addToOrder('Tomato Soup',40)">Add</button></div>
+    </div>
+  </section>
+<div style="text-align:center; margin:30px 0;">
+  <a href="index.html" 
+     style="padding:10px 20px; background:#b91c1c; color:white; text-decoration:none; border-radius:5px; font-weight:bold; transition:0.3s;" 
+     onmouseover="this.style.background='#f59e0b';" 
+     onmouseout="this.style.background='#b91c1c';">
+     ⬅ Back to Home
+  </a>
+</div>
+
+  <!-- Orders Page -->
+  <section id="orders-page" style="display:none;">
+    <h2>My Orders 🛒</h2>
+    <div id="order-list"></div>
+    <h3 id="total-price">Total: ₹0</h3>
+
+    <h3>Enter Your Details</h3>
+    <input type="text" id="orderName" placeholder="Enter your name"><br><br>
+    <input type="text" id="orderPhone" placeholder="Enter your phone number"><br><br>
+
+    <button onclick="placeOrder()">Place Order</button>
+    <div id="order-status" class="status"></div>
+
+    <h3>Order History</h3>
+    <div id="history-list"></div>
+
+    <h3>📊 Today's Stats</h3>
+    <div id="stats"></div>
+  </section>
+<!--javascript code-->
+  <script type="module">
+    // Import Firebase services
+    import { OrderService, MenuService } from '../firebase-services.js';
+    
+    let orders = [];
+    let total = 0;
+    let orderService;
+    let menuService;
+
+    // Initialize Firebase services when DOM is loaded
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        // Wait for Firebase to be initialized
+        while (!window.db) {
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        
+        orderService = new OrderService(window.db);
+        menuService = new MenuService(window.db);
+        // Expose to other scripts and inline handlers
+        window.orderService = orderService;
+        window.menuService = menuService;
+        
+        // Initialize menu data if needed
+        await menuService.initializeMenuData();
+        
+        console.log('Firebase services initialized successfully');
+      } catch (error) {
+        console.error('Error initializing Firebase services:', error);
+      }
+    });
+
+    function showPage(page) {
+      document.getElementById("menu-page").style.display = (page === "menu") ? "block" : "none";
+      document.getElementById("orders-page").style.display = (page === "orders") ? "block" : "none";
+      if (page === "orders") loadHistory();
+    }
+
+    function addToOrder(item, price) {
+      let existing = orders.find(o => o.item === item);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        orders.push({item, price, qty: 1});
+      }
+      updateOrders();
+      alert(item + " added to your cart!");
+    }
+
+    function updateOrders() {
+      let orderList = document.getElementById("order-list");
+      orderList.innerHTML = "";
+      total = 0;
+      orders.forEach((o, index) => {
+        total += o.price * o.qty;
+        let div = document.createElement("div");
+        div.className = "order-item";
+        div.innerHTML = `
+          <span>${o.item} - ₹${o.price} x ${o.qty}</span>
+          <div>
+            <button onclick="changeQty(${index}, 1)">+</button>
+            <button onclick="changeQty(${index}, -1)">-</button>
+            <button onclick="removeItem(${index})">Remove</button>
+          </div>
+        `;
+        orderList.appendChild(div);
+      });
+      document.getElementById("total-price").innerText = "Total: ₹" + total;
+    }
+
+    function changeQty(index, amount) {
+      orders[index].qty += amount;
+      if (orders[index].qty <= 0) {
+        orders.splice(index, 1);
+      }
+      updateOrders();
+    }
+
+    function removeItem(index) {
+      orders.splice(index, 1);
+      updateOrders();
+    }
+
+    async function placeOrder() {
+      if (orders.length === 0) {
+        alert("Your cart is empty!");
+        return;
+      }
+
+      let name = document.getElementById("orderName").value.trim();
+      let phone = document.getElementById("orderPhone").value.trim();
+      if (name === "" || phone === "") {
+        alert("Please enter both name and phone number!");
+        return;
+      }
+
+      if (!orderService) {
+        alert("Firebase services not initialized. Please refresh the page.");
+        return;
+      }
+
+      let orderCopy = JSON.parse(JSON.stringify(orders));
+
+      const orderToSave = {
+        name,
+        phone,
+        items: orderCopy,
+        total
+      };
+
+      try {
+        const result = await orderService.saveOrder(orderToSave);
+        
+        if (result.success) {
+          document.getElementById("order-status").innerText =
+            `Order placed! Token #${result.token} for ${name} (Phone: ${phone}) (Status: Pending)`;
+
+          orders = [];
+          total = 0;
+          updateOrders();
+          document.getElementById("orderName").value = "";
+          document.getElementById("orderPhone").value = "";
+
+          loadHistory();
+        } else {
+          alert("Error placing order: " + result.error);
+        }
+      } catch (error) {
+        console.error('Error placing order:', error);
+        alert("Error placing order. Please try again.");
+      }
+    }
+
+    // This function is now handled automatically by Firebase services
+    // No need for manual status updates as they're scheduled in the service
+
+    async function calculateStats() {
+      if (!orderService) {
+        document.getElementById("stats").innerHTML = "Loading stats...";
+        return;
+      }
+
+      try {
+        const stats = await orderService.calculateStats();
+        
+        if (stats.customerCount === 0) {
+          document.getElementById("stats").innerHTML = "No orders yet.";
+          return;
+        }
+
+        document.getElementById("stats").innerHTML = `
+          <strong>Most Sold:</strong> ${stats.mostSoldItem || 'N/A'} (${stats.mostSoldCount || 0} sold)<br/>
+          <strong>Total Profit:</strong> ₹${stats.totalProfit}<br/>
+          <strong>Customer Count:</strong> ${stats.customerCount}
+        `;
+      } catch (error) {
+        console.error('Error calculating stats:', error);
+        document.getElementById("stats").innerHTML = "Error loading stats.";
+      }
+    }
+
+    async function loadHistory() {
+      let div = document.getElementById("history-list");
+      div.innerHTML = "Loading order history...";
+      
+      if (!orderService) {
+        div.innerHTML = "Firebase services not initialized.";
+        return;
+      }
+
+      try {
+        // Get phone number for filtering orders
+        const phone = document.getElementById("orderPhone").value.trim();
+        let orders;
+        
+        if (phone) {
+          orders = await orderService.getOrdersByPhone(phone);
+        } else {
+          orders = await orderService.getAllOrders();
+        }
+        
+        div.innerHTML = "";
+        
+        if (orders.length === 0) {
+          div.innerHTML = "No orders found.";
+          calculateStats();
+          return;
+        }
+
+        orders.forEach(o => {
+          let d = document.createElement("div");
+          d.className = "history-item";
+          let date = o.timestamp ? o.timestamp.toDate().toLocaleString() : 'Unknown date';
+          let itemsHtml = o.items.map(it => `${it.item} - ₹${it.price} x ${it.qty}`).join("<br/>");
+          d.innerHTML = `
+            <strong>Token #${o.token}</strong> — ${date}<br/>
+            <em>Name:</em> ${o.name} <br/>
+            <em>Phone:</em> ${o.phone} <br/>
+            <em>Status:</em> <strong>${o.status}</strong><br/>
+            <em>Total:</em> ₹${o.total}<br/>
+            <div style="margin-top:8px">${itemsHtml}</div>
+          `;
+          div.appendChild(d);
+        });
+
+        calculateStats();
+      } catch (error) {
+        console.error('Error loading history:', error);
+        div.innerHTML = "Error loading order history.";
+      }
+    }
+
+    function filterMenu() {
+      let search = document.getElementById("search").value.toLowerCase();
+      let items = document.querySelectorAll("#menu-list .menu-item");
+      items.forEach(i => {
+        let text = i.innerText.toLowerCase();
+        i.style.display = text.includes(search) ? "flex" : "none";
+      });
+    }
+
+    // Expose functions used by inline onclick handlers
+    window.showPage = showPage;
+    window.addToOrder = addToOrder;
+    window.changeQty = changeQty;
+    window.removeItem = removeItem;
+    window.placeOrder = placeOrder;
+    window.loadHistory = loadHistory;
+
+    window.onload = () => {
+      localStorage.removeItem("canteenOrders"); 
+      showPage("menu");
+      
+      // Check for search parameter from homepage
+      const urlParams = new URLSearchParams(window.location.search);
+      const searchQuery = urlParams.get('search');
+      if (searchQuery) {
+        document.getElementById('searchBox').value = searchQuery;
+        // Trigger search automatically
+        setTimeout(() => {
+          document.getElementById('searchBtn').click();
+        }, 1000);
+      }
+    };
+  </script>
+  
+  <!-- Firebase Configuration -->
+  <script type="module" src="../firebase-config.js"></script>
+  <script type="module" src="../firebase-services.js"></script>
+  
+  <script type="module">
+    // Search functionality using Firestore
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById("searchBtn").addEventListener("click", async function () {
+          let query = document.getElementById("searchBox").value.trim();
+          let resultsDiv = document.getElementById("results");
+          
+          if (!query) {
+              resultsDiv.innerHTML = "<p>Please enter a search term.</p>";
+              return;
+          }
+
+          if (!window.menuService) {
+              resultsDiv.innerHTML = "<p>Firebase services not initialized. Please refresh the page.</p>";
+              return;
+          }
+
+          try {
+              resultsDiv.innerHTML = "<p>Searching...</p>";
+              const data = await window.menuService.searchMenuItems(query);
+              
+              resultsDiv.innerHTML = "";
+
+              if (data.length === 0) {
+                  resultsDiv.innerHTML = "<p>No food items found.</p>";
+                  return;
+              }
+
+              data.forEach(item => {
+                  let div = document.createElement("div");
+                  div.className = "menu-item";
+                  div.innerHTML = `
+                      <img src="${item.image}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; margin-right: 15px;">
+                      <div class="menu-text">${item.name} - ₹${item.price}</div>
+                      <button onclick="addToOrder('${item.name}', ${item.price})">Add</button>
+                  `;
+                  resultsDiv.appendChild(div);
+              });
+          } catch (error) {
+              console.error("Search error:", error);
+              resultsDiv.innerHTML = "<p>Error searching menu items.</p>";
+          }
+      });
+    });
+    
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+# Python virtual environments
+env/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# VS Code settings (optional)
+.vscode/
+
+# OS files
+.DS_Store
